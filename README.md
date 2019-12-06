@@ -25,13 +25,13 @@ The help should provide sufficient details and the defaults likely provide usabl
 ### Example Invocation
 Below is an invocation with the short form command line parameters, and corresponding output using all the available command line parameters:
 ```
-$ ./albgen.py -t 1 -m 100 -i 10 -e Locrian -e Lydian -a 200 -n 100 -o human
+$ ./albgen.py -t 1 -m 100 -i 10 -e locrian -e lydian -a 200 -n 100 -o human
 1 - Your Strange Tradition (2:44)
 A Smooth, Dull, Happy track in 4/4,
 The key of F Dorian at 20bpm.
 
-$ ./albgen.py --track_count 2 --max_bpm 200 --min_bpm 100 --exclude_mode Ionian --exclude_mode Aeolian --max_length 300 --min_length 200 --output_format csv
-"Track","Title","Tempo/BPM","Time Signature","Length/s","Key","Mode","Colour","Mood","Texture"
-"1","The Real People","156","7/8","274","Eb","Locrian","Dull","Melancholy","Rough"
-"2","A Faithful Kiss","146","7/8","250","C","Mixolydian","Brilliant","Sad","Natural"
+$ ./albgen.py --track_count 2 --max_bpm 200 --min_bpm 100 --exclude_mode ionian --exclude_mode aeolian --max_length 300 --min_length 200 --output_format csv
+"track","title","tempo/bpm","time signature","length/s","key","mode","colour","mood","texture"
+"1","The Real People","156","7/8","274","Eb","locrian","dull","melancholy","rough"
+"2","A Faithful Kiss","146","7/8","250","C","mixolydian","brilliant","sad","natural"
 ```
