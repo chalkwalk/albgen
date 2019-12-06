@@ -21,4 +21,17 @@ The help should provide sufficient details and the defaults likely provide usabl
 * -n --min_length (int)MIN_LEN:  The shortest track to suggest in seconds.
 * -o --output_format (str)TYPE:  The format to output the album listing.
 ```
+
+### Example Invocation
+Below is an invocation with the short form command line parameters, and corresponding output using all the available command line parameters:
+```
+$ ./albgen.py -t 1 -m 100 -i 10 -e Locrian -e Lydian -a 200 -n 100 -o human
+1 - Your Strange Tradition (2:44)
+A Smooth, Dull, Happy track in 4/4,
+The key of F Dorian at 20bpm.
+
+$ ./albgen.py --track_count 2 --max_bpm 200 --min_bpm 100 --exclude_mode Ionian --exclude_mode Aeolian --max_length 300 --min_length 200 --output_format csv
+"Track","Title","Tempo/BPM","Time Signature","Length/s","Key","Mode","Colour","Mood","Texture"
+"1","The Real People","156","7/8","274","Eb","Locrian","Dull","Melancholy","Rough"
+"2","A Faithful Kiss","146","7/8","250","C","Mixolydian","Brilliant","Sad","Natural"
 ```
