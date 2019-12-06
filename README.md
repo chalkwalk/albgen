@@ -12,11 +12,13 @@ I recently found myself making very similar music, time after time. I'd fall int
 ## Usage
 The help should provide sufficient details and the defaults likely provide usable output, but for completeness the supported arguments are as follows:
 ```
-* --track_count (int)COUNT:   How many tracks the album will have.
-* --max_bpm (int)MAX_BPM:     The fastest BPM to suggest.
-* --min_bpm (int)MIN_BPM:     The slowest BPM to suggest.
-* --exclude_mode (str)MODE:   A list of key modes to exclude.
-* --max_length (int)MAX_LEN:  The longest track to suggest in seconds.
-* --min_length (int)MIN_LEN:  The shortest track to suggest in seconds.
-* --output_format (str)TYPE:  The format to output the album listing.
+* -h --help:                     Show usage help.
+* -t --track_count (int)COUNT:   How many tracks the album will have.
+* -m --max_bpm (int)MAX_BPM:     The fastest BPM to suggest.
+* -i --min_bpm (int)MIN_BPM:     The slowest BPM to suggest.
+* -e --exclude_mode (str)MODE:   A list of key modes to exclude.
+* -a --max_length (int)MAX_LEN:  The longest track to suggest in seconds.
+* -n --min_length (int)MIN_LEN:  The shortest track to suggest in seconds.
+* -o --output_format (str)TYPE:  The format to output the album listing.
+```
 ```
