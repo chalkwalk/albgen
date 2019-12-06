@@ -291,7 +291,7 @@ def NumberToKey(number):
 
 def NumberToMode(number):
   return ListNumberToString([x for x in [
-      'Lydian', 'Ionian', 'Mixolydian', 'Dorian', 'Aeolean', 'Phrygian',
+      'Lydian', 'Ionian', 'Mixolydian', 'Dorian', 'Aeolian', 'Phrygian',
       'Locrian'
   ] if x not in args.exclude_mode], number)
 
@@ -517,7 +517,7 @@ def GenerateAlbumText(album, output_format):
 
 def main():
   album = GenerateAlbum(args.track_count)
-  print(GenerateAlbumText(album, args.output_format))
+  print(GenerateAlbumText(album, args.output_format), end='')
 
 if __name__ == '__main__':
   main()
