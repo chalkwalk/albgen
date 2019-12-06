@@ -8,13 +8,13 @@ import argparse
 
 parser = argparse.ArgumentParser(description='Generate an album listing.')
 
-parser.add_argument('--track_count', type=int, default=12, help='How many tracks the album will have.')
+parser.add_argument('--track_count', metavar='COUNT', type=int, default=12, help='How many tracks the album will have.')
 parser.add_argument('--max_bpm', type=int, default=150, help='The fastest BPM to suggest.')
 parser.add_argument('--min_bpm', type=int, default=70, help='The slowest BPM to suggest.')
-parser.add_argument('--excluded_modes', action='append', default=[], type=str, help='A list of key modes to exclude.')
-parser.add_argument('--max_length', type=int, default=150, help='The longest track to suggest in seconds.')
-parser.add_argument('--min_length', type=int, default=70, help='The shortest track to suggest in seconds.')
-parser.add_argument('--output_format', type=str, choices=['human', 'yaml', 'csv'], default='human', help='The format to output the album listing')
+parser.add_argument('--exclude_mode', metavar='MODE', action='append', default=[], type=str, help='A list of key modes to exclude.')
+parser.add_argument('--max_length', metavar='MAX_LEN', type=int, default=150, help='The longest track to suggest in seconds.')
+parser.add_argument('--min_length', metavar='MIN_LEN', type=int, default=70, help='The shortest track to suggest in seconds.')
+parser.add_argument('--output_format', metavar='TYPE', type=str, choices=['human', 'yaml', 'csv'], default='human', help='The format to output the album listing')
 args = parser.parse_args()
 
 
@@ -293,7 +293,7 @@ def NumberToMode(number):
   return ListNumberToString([x for x in [
       'Lydian', 'Ionian', 'Mixolydian', 'Dorian', 'Aeolean', 'Phrygian',
       'Locrian'
-  ] if x not in args.excluded_modes], number)
+  ] if x not in args.exclude_mode], number)
 
 
 def NumberToColour(number):
