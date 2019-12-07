@@ -124,6 +124,8 @@ def PluraliseNoun(noun):
   word = noun.lower()
   if word.endswith('fe'):
     return noun[:-2] + 'ves'
+  if word.endswith('ff'):
+    return noun
   if word.endswith('f'):
     return noun[:-1] + 'ves'
   if word.endswith('o') or word.endswith('x'):
