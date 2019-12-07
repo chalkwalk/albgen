@@ -14,13 +14,16 @@ The help should provide sufficient details and the defaults likely provide usabl
 ```
 * -h --help:                     Show usage help.
 * -t --track_count (int)COUNT:   How many tracks the album will have.
+* -a --album_length (int)TIME:   How long the album should be in seconds.
 * -m --max_bpm (int)MAX_BPM:     The fastest BPM to suggest.
 * -i --min_bpm (int)MIN_BPM:     The slowest BPM to suggest.
 * -e --exclude_mode (str)MODE:   A list of key modes to exclude.
-* -a --max_length (int)MAX_LEN:  The longest track to suggest in seconds.
+* -x --max_length (int)MAX_LEN:  The longest track to suggest in seconds.
 * -n --min_length (int)MIN_LEN:  The shortest track to suggest in seconds.
 * -o --output_format (str)TYPE:  The format to output the album listing.
 ```
+
+Note: You should only use one of album_length or track_count.
 
 ### Example Invocation
 Below is an invocation with the short form command line parameters, and corresponding output using all the available command line parameters:

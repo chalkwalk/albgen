@@ -12,14 +12,20 @@ modes = ['lydian', 'ionian', 'mixolydian', 'dorian', 'aeolian', 'phrygian',
 
 parser = argparse.ArgumentParser(description='Generate an album listing.')
 
-parser.add_argument('--track_count', '-t', metavar='COUNT', type=int, default=12, help='Show many tracks the album will have.')
+parser.add_argument('--track_count', '-t', metavar='COUNT', default=0, type=int, help='Show many tracks the album will have (use this or album_length).')
+parser.add_argument('--album_length', '-a', metavar='TIME', default=0, type=int, help='How long hte album should be in seconds (use this or track_count).')
 parser.add_argument('--max_bpm', '-m', type=int, default=150, help='The fastest BPM to suggest.')
 parser.add_argument('--min_bpm', '-i', type=int, default=70, help='The slowest BPM to suggest.')
 parser.add_argument('--exclude_mode', '-e', metavar='MODE', action='append', default=[], choices=modes, type=lambda s: s.lower(), help='(Repeated) A musical mode to exclude.')
-parser.add_argument('--max_length', '-a', metavar='MAX_LEN', type=int, default=150, help='The longest track to suggest in seconds.')
+parser.add_argument('--max_length', '-x', metavar='MAX_LEN', type=int, default=150, help='The longest track to suggest in seconds.')
 parser.add_argument('--min_length', '-n', metavar='MIN_LEN', type=int, default=70, help='The shortest track to suggest in seconds.')
 parser.add_argument('--output_format', '-o', metavar='TYPE', type=lambda s: s.lower(), choices=['human', 'yaml', 'csv', 'html', 'www'], default='human', help='The format to output the album listing.')
+
 args = parser.parse_args()
+
+if args.track_count > 0 and args.album_length > 0:
+  raise Exception('You may no specify track_count and album_length.')
+
 
 
 def PathCanonicalize(filename):
@@ -215,23 +221,39 @@ def GetBestPermutation(tracks):
   return best_track_list
 
 
-def GenerateAlbum(track_count):
+def AppendTrack(tracks, length):
+  tracks.append({
+      'key': GetUniformRandom(),
+      'tempo': GetGaussRandom(),
+      'mode': GetUniformRandom(),
+      'colour': GetUniformRandom(),
+      'mood': GetUniformRandom(),
+      'time': GetGaussRandom(),
+      'length': length,
+      'article': GetUniformRandom(),
+      'adjective': GetUniformRandom(),
+      'noun': GetUniformRandom(),
+      'plural': GetUniformRandom(),
+      'texture': GetUniformRandom(),
+  })
+
+
+def GenerateAlbum(track_count, album_length):
   tracks = []
-  for track in range(0, track_count):
-    tracks.append({
-        'key': GetUniformRandom(),
-        'tempo': GetGaussRandom(),
-        'mode': GetUniformRandom(),
-        'colour': GetUniformRandom(),
-        'mood': GetUniformRandom(),
-        'time': GetGaussRandom(),
-        'length': GetGaussRandom(),
-        'article': GetUniformRandom(),
-        'adjective': GetUniformRandom(),
-        'noun': GetUniformRandom(),
-        'plural': GetUniformRandom(),
-        'texture': GetUniformRandom(),
-    })
+  if track_count:
+    for track in range(0, track_count):
+      length = GetGaussRandom()
+      AppendTrack(tracks, length)
+  else:
+    total_time = 0
+    average_track_length = (args.max_length + args.min_length) / 4
+    maximum_album_length = album_length - average_track_length
+    if maximum_album_length < 1:
+      maximum_album_length = 1
+    while total_time < maximum_album_length:
+      length = GetGaussRandom()
+      total_time += NumberToLength(length)
+      AppendTrack(tracks, length)
   return GetBestPermutation(tracks)
 
 
@@ -320,8 +342,17 @@ def GenerateAlbumText(album, output_format):
     return GenerateAlbumHumanText(album)
 
 
-def main():
-  album = GenerateAlbum(args.track_count)
+def main(): 
+  track_count = None
+  album_length = None
+  if args.track_count < 1 and args.album_length < 1:
+    track_count = 12
+  else:
+    if args.track_count > 0:
+      track_count = args.track_count
+    else:
+      album_length = args.album_length
+  album = GenerateAlbum(track_count, album_length)
   print(GenerateAlbumText(album, args.output_format), end='')
 
 if __name__ == '__main__':
