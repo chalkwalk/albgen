@@ -18,7 +18,7 @@ parser.add_argument('--min_bpm', '-i', type=int, default=70, help='The slowest B
 parser.add_argument('--exclude_mode', '-e', metavar='MODE', action='append', default=[], choices=modes, type=lambda s: s.lower(), help='(Repeated) A musical mode to exclude.')
 parser.add_argument('--max_length', '-a', metavar='MAX_LEN', type=int, default=150, help='The longest track to suggest in seconds.')
 parser.add_argument('--min_length', '-n', metavar='MIN_LEN', type=int, default=70, help='The shortest track to suggest in seconds.')
-parser.add_argument('--output_format', '-o', metavar='TYPE', type=lambda s: s.lower(), choices=['human', 'yaml', 'csv'], default='human', help='The format to output the album listing.')
+parser.add_argument('--output_format', '-o', metavar='TYPE', type=lambda s: s.lower(), choices=['human', 'yaml', 'csv', 'html', 'www'], default='human', help='The format to output the album listing.')
 args = parser.parse_args()
 
 
@@ -272,6 +272,29 @@ def GenerateAlbumYAMLText(album):
   return output
 
 
+def GenerateAlbumHTMLText(album):
+  output = '<html>\n'
+  output += '  <head>\n'
+  output += '    <title>Your Album Listing</title>\n'
+  output += '  </head>\n'
+  output += '  <body>\n'
+  for index, track in enumerate(album):
+    output += '    <p>\n'
+    output += '      %s - %s (%s)<br>\n' % (index + 1, GetTrackTitle(track), SecondsToMinutes(NumberToLength(track['length'])))
+    output += '      A %s, %s, %s track in %s,<br>\n' % (NumberToTexture(track['texture']).capitalize(), NumberToColour(track['colour']).capitalize(), NumberToMood(track['mood']).capitalize(), NumberToTimeSignature(track['time']))
+    output += '      The key of %s %s at %sbpm.\n' % (NumberToKey(track['key']), NumberToMode(track['mode']).capitalize(), NumberToBPM(track['tempo']))
+    output += '    </p>\n'
+  output += '  </body>\n'
+  output += '</html>\n'
+  return output
+
+
+def GenerateAlbumWWWText(album):
+  output = 'Content-Type: text/html\n\n'
+  output += GenerateAlbumHTMLText(album)
+  return output
+
+
 def GenerateAlbumHumanText(album):
   output = ''
   for index, track in enumerate(album):
@@ -283,6 +306,10 @@ def GenerateAlbumHumanText(album):
 
 
 def GenerateAlbumText(album, output_format):
+  if output_format == 'www':
+    return GenerateAlbumWWWText(album)
+  if output_format == 'html':
+    return GenerateAlbumHTMLText(album)
   if output_format == 'csv':
     return GenerateAlbumCSVText(album)
   if output_format == 'yaml':
