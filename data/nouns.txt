@@ -640,7 +640,6 @@ husband
 ice
 idea
 ideal
-if
 illegal
 image
 imagination
@@ -683,7 +682,6 @@ invite
 iron
 island
 issue
-it
 item
 jacket
 job
@@ -719,7 +717,6 @@ language
 laugh
 law
 lawyer
-lay
 layer
 lead
 leader
@@ -1185,7 +1182,6 @@ shake
 shame
 shape
 share
-she
 shelter
 shift
 shine
@@ -1411,7 +1407,6 @@ type
 uncle
 understanding
 union
-unique
 unit
 university
 upper
