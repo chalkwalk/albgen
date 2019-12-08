@@ -1,6 +1,6 @@
 # Albgen
 
-**TL;DR**: This is a simple tool used to generate a random track listing for an album.`
+**TL;DR**: This is a simple tool used to generate a random track listing for an album.
 ```
 * ./albgen.py -h  # Some basic help.
 * ./albgen.py     # Generate a random album prompt using the default parameters.
