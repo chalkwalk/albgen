@@ -142,7 +142,7 @@ def PluraliseNoun(noun):
     return noun[:-2] + 'a'
   if word.endswith('sh') or word.endswith('ch') or word.endswith('ss'):
     return noun + 'es'
-  if word.endswith('ay'):
+  if word.endswith('ay') or word.endswith('oy'):
     return noun + 's'
   if word.endswith('y'):
     return noun[:-1] + 'ies'
