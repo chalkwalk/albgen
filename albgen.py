@@ -85,7 +85,10 @@ def ListNumberToString(words, number, probability_of_none=0.0):
   # Given a list of words, a number (approximately) in the unit interval and a
   # probability of none return a word from the list based on the number or None
   # based on the probability.
-  scaled_number = number * (1.0 + probability_of_none)
+  if probability_of_none < 1.0:
+    scaled_number = number * (1.0 / (1.0 - probability_of_none))
+  else:
+    return None
   if scaled_number > 1.0: return None
   if isinstance(words[0], tuple):
     # If the probabilities are weighted, handle it appropriately.
@@ -148,7 +151,7 @@ def NumberToLength(number):
   return length_in_seconds
 
 
-def NumberToArticle(number, probability_of_none=0.25):
+def NumberToArticle(number, probability_of_none=0.2):
   # Given a number in the unit interval and probability return an article or none.
   return ListNumberToString([
       ('my', 1), ('your', 1), ('his', 1), ('her', 1), ('our', 1),
