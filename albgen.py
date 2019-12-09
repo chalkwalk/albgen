@@ -28,6 +28,8 @@ if args.track_count > 0 and args.album_length > 0:
 
 
 def PathCanonicalize(filename):
+  # Given a path, if it's absolute, return it, if it's relative, assume it's
+  # relative to the directory containing the executable.
   if os.path.isabs(filename):
     return filename
   else:
@@ -35,6 +37,7 @@ def PathCanonicalize(filename):
 
 
 def LoadWordList(filename):
+  # Load the lines of a file into a list and return it.
   file_path = PathCanonicalize(filename)
   with open(file_path, 'r') as file:
     words = [word.strip() for word in file.readlines()]
@@ -55,11 +58,16 @@ def GetGaussRandom():
 
 
 def NumberToBPM(number):
+  # Given a number (approximately) in the unit interval, return a BPM based on
+  # the command line arguments.
   bpm_range = args.max_bpm - args.min_bpm
   return round(args.min_bpm + bpm_range * number)
 
 
 def PDFNumberToString(words, number):
+  # Given a list of tuples (word, weight) and a number (approximately) in the
+  # unit interval return a word from the list using weight as the relative
+  # probability of each word.
   pdf_sum = 0.0
   for (_, b) in words:
     pdf_sum += b
@@ -69,12 +77,18 @@ def PDFNumberToString(words, number):
     pdf_partial_sum += b
     if pdf_partial_sum >= limit:
       return a
+  # This is here to handle numbers > 1.0 (in case we used a gaussian probability)
+  return words[-1][0]
 
 
 def ListNumberToString(words, number, probability_of_none=0.0):
+  # Given a list of words, a number (approximately) in the unit interval and a
+  # probability of none return a word from the list based on the number or None
+  # based on the probability.
   scaled_number = number * (1.0 + probability_of_none)
   if scaled_number > 1.0: return None
   if isinstance(words[0], tuple):
+    # If the probabilities are weighted, handle it appropriately.
     return PDFNumberToString(words, number)
   else:
     index = int(number * len(words))
@@ -83,6 +97,7 @@ def ListNumberToString(words, number, probability_of_none=0.0):
     return words[index]
 
 def NumberToKey(number):
+  # Given a number in the unit interval return a corresponding musical note.
   return ListNumberToString([
       'Cb', 'C', 'C#', 'Db', 'D', 'D', 'D#', 'Eb', 'E', 'E#', 'Fb', 'F', 'F#',
       'Gb', 'G', 'G', 'G#', 'Ab', 'A', 'A', 'A#', 'Bb', 'B', 'B#'
@@ -90,42 +105,51 @@ def NumberToKey(number):
 
 
 def NumberToMode(number):
+  # Given a number in the unit interval return a corresponding musical mode.
   return ListNumberToString(
           [x for x in modes if x not in args.exclude_mode], number)
 
 
 def NumberToColour(number):
+  # Given a number in the unit interval return a corresponding adjectival musical colour.
   return ListNumberToString([
       'brilliant', 'bright', 'neutral', 'dull', 'dark'
   ], number)
 
 
 def NumberToMood(number):
+  # Given a number in the unit interval return a corresponding adjectival musical mood.
   return ListNumberToString([
       'ecstatic', 'happy', 'calm', 'mellow', 'melancholy', 'sad', 'devastated'
   ], number)
 
 
 def NumberToTimeSignature(number):
-    return ListNumberToString([
-        ('2/4', 1), ('3/4', 20), ('4/4', 68), ('7/8', 8), ('5/4', 3)], number)
+  # Given a number in the unit interval return a corresponding musical time signature.
+  return ListNumberToString([
+      ('2/4', 1), ('3/4', 20), ('4/4', 68), ('7/8', 8), ('5/4', 3)], number)
 
 
 def NumberToTexture(number):
+  # Given a number in the unit interval return a corresponding adjectival musical texture.
   return ListNumberToString(['gritty', 'rough', 'natural', 'smooth'], number)
 
 
 def SecondsToMinutes(seconds):
+  # Given a number in seconds, return a corresponding string in minutes and seconds.
   return '%d:%02d' % (seconds/60, seconds % 60)
 
 
 def NumberToLength(number):
+  # Given a number (approximately) in the unit interval, return a track length
+  # in seconds based on the command line arguments.
   length_range = args.max_length - args.min_length
   length_in_seconds = round(args.min_length + length_range * number)
   return length_in_seconds
 
 
 def NumberToArticle(number, probability_of_none=0.25):
+  # Given a number in the unit interval and probability return an article or none.
   return ListNumberToString([
       ('my', 1), ('your', 1), ('his', 1), ('her', 1), ('our', 1),
       ('their', 1), ('the', 3), ('a', 3)
@@ -133,14 +157,17 @@ def NumberToArticle(number, probability_of_none=0.25):
 
 
 def NumberToAdjective(number, probability_of_none=0.05):
+  # Given a number in the unit interval and probability return an adjective or none.
   return ListNumberToString(adjectives, number, probability_of_none)
 
 
 def NumberToNoun(number, probability_of_none=0.01):
+  # Given a number in the unit interval and probability return a noun or none.
   return ListNumberToString(nouns, number, probability_of_none)
 
 
 def PluraliseNoun(noun):
+  # Given a noun, return its plural.
   word = noun.lower()
   if word.endswith('fe'):
     return noun[:-2] + 'ves'
@@ -168,6 +195,7 @@ def PluraliseNoun(noun):
 
 
 def ArticleCorrection(article, next_word):
+  # Given an article and the following return cover 'A' to 'An' if necessary.
   if article == 'A' and next_word[0] in ['A', 'E', 'I', 'O', 'U']:
     return article + 'n'
   else:
@@ -175,48 +203,51 @@ def ArticleCorrection(article, next_word):
 
 
 def GetTrackTitle(track):
-    title = ''
-    noun = NumberToNoun(track['noun'])
-    if noun:
-      # Noun
-      noun = noun.capitalize()
-      adjective = NumberToAdjective(track['adjective'])
-      if adjective:
-        # Noun and Adjective
-        adjective = adjective.capitalize()
-        article = NumberToArticle(track['article'])
-        if article:
-          # Noun, Adjective & Article
-          article = ArticleCorrection(article.capitalize(), adjective)
-      else:
-        # Noun and No Adjective
-        article = NumberToArticle(track['article'])
-        if article:
-          # Noun, No Adjective & Article
-          article = ArticleCorrection(article.capitalize(), noun)
-    else:
-      # No Noun
-      adjective = NumberToAdjective(track['adjective'], 0.0).capitalize()
-      article = 'The'
-
-    probability_of_plural = 0.3
-    if noun and track['plural'] < probability_of_plural and ((article and article[0] != 'A') or not article):
-      noun = PluraliseNoun(noun)
-    title_words = []
-    if article:
-      title_words.append(article)
+  # Given a track definition object, return the corresponding track title.
+  title = ''
+  noun = NumberToNoun(track['noun'])
+  if noun:
+    # Noun
+    noun = noun.capitalize()
+    adjective = NumberToAdjective(track['adjective'])
     if adjective:
-      title_words.append(adjective)
-    if noun:
-      title_words.append(noun)
-    return ' '.join(title_words)
+      # Noun and Adjective
+      adjective = adjective.capitalize()
+      article = NumberToArticle(track['article'])
+      if article:
+        # Noun, Adjective & Article
+        article = ArticleCorrection(article.capitalize(), adjective)
+    else:
+      # Noun and No Adjective
+      article = NumberToArticle(track['article'])
+      if article:
+        # Noun, No Adjective & Article
+        article = ArticleCorrection(article.capitalize(), noun)
+  else:
+    # No Noun
+    adjective = NumberToAdjective(track['adjective'], 0.0).capitalize()
+    article = 'The'
+
+  probability_of_plural = 0.3
+  if noun and track['plural'] < probability_of_plural and ((article and article[0] != 'A') or not article):
+    noun = PluraliseNoun(noun)
+  title_words = []
+  if article:
+    title_words.append(article)
+  if adjective:
+    title_words.append(adjective)
+  if noun:
+    title_words.append(noun)
+  return ' '.join(title_words)
 
 
 def GetCyclicDistance(a, b):
+  # Given two numbers in a toral unit interval, return their minimum distance.
   return min(abs(a - b), abs(a - b - 1), abs(a - b + 1))
 
 
 def GetDistance(v, w):
+  # Given a pair of track definitions, return the distance between them.
   distance_sum = 0.0
   distance_sum += abs(v['colour'] - w['colour']) * 10
   distance_sum += abs(v['mood'] - w['mood']) * 8
@@ -234,6 +265,8 @@ def GetDistance(v, w):
 
 
 def GetBestPermutation(tracks):
+  # Given a list of tracks, return an ordering that approximately minimises the
+  # sum of the distances between all adjacent tracks.
   best_score = 1000000.0
   best_track_list = None
   for index, track in enumerate(tracks):
@@ -261,6 +294,8 @@ def GetBestPermutation(tracks):
 
 
 def AppendTrack(tracks, length):
+  # Given a track list and length, generate and append a track of given length
+  # to a track listing.
   tracks.append({
       'key': GetUniformRandom(),
       'tempo': GetGaussRandom(),
@@ -278,6 +313,7 @@ def AppendTrack(tracks, length):
 
 
 def GenerateAlbum(track_count, album_length):
+  # Given a track count or album length generate an album.
   tracks = []
   if track_count:
     for track in range(0, track_count):
@@ -297,6 +333,7 @@ def GenerateAlbum(track_count, album_length):
 
 
 def GenerateAlbumCSVText(album):
+  # Given a list of track objects (an album) return a corresponding CSV.
   output = ''
   rows = []
   rows.append(['track', 'title', 'tempo/bpm', 'time signature', 'length/s', 'key', 'mode', 'colour', 'mood', 'texture'])
@@ -320,6 +357,7 @@ def GenerateAlbumCSVText(album):
 
 
 def GenerateAlbumYAMLText(album):
+  # Given a list of track objects (an album) return corresponding YAML.
   output = 'tracks:\n'
   for index, track in enumerate(album):
     output += '  - track_num: %s\n' % (index + 1)
@@ -336,6 +374,7 @@ def GenerateAlbumYAMLText(album):
 
 
 def GenerateAlbumHTMLText(album):
+  # Given a list of track objects (an album) return corresponding HTML.
   output = '<html>\n'
   output += '  <head>\n'
   output += '    <title>Your Album Listing</title>\n'
@@ -354,12 +393,14 @@ def GenerateAlbumHTMLText(album):
 
 
 def GenerateAlbumWWWText(album):
+  # Given a list of track objects (an album) return corresponding HTML with HTTP header.
   output = 'Content-Type: text/html\n\n'
   output += GenerateAlbumHTMLText(album)
   return output
 
 
 def GenerateAlbumHumanText(album):
+  # Given a list of track objects (an album) return corresponding human readable string.
   output = ''
   for index, track in enumerate(album):
     output += '%s - %s (%s)\n' % (index + 1, GetTrackTitle(track), SecondsToMinutes(NumberToLength(track['length'])))
@@ -370,6 +411,8 @@ def GenerateAlbumHumanText(album):
 
 
 def GenerateAlbumText(album, output_format):
+  # Given a list of track objects (an album) and output format, return a
+  # corresponding string.
   if output_format == 'www':
     return GenerateAlbumWWWText(album)
   if output_format == 'html':
