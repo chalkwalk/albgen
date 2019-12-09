@@ -1,5 +1,4 @@
 ability
-abroad
 abuse
 access
 accident
@@ -18,7 +17,6 @@ advantage
 advertising
 advice
 affair
-affect
 afternoon
 age
 agency
@@ -35,6 +33,7 @@ amount
 analysis
 analyst
 anger
+angel
 angle
 animal
 annual
@@ -113,7 +112,6 @@ bet
 beyond
 bicycle
 bid
-big
 bike
 bill
 bird
@@ -122,7 +120,6 @@ birthday
 bit
 bite
 bitter
-black
 blame
 blank
 blind
@@ -182,7 +179,6 @@ camera
 camp
 campaign
 can
-cancel
 cancer
 candidate
 candle
@@ -220,6 +216,7 @@ check
 cheek
 chemical
 chemistry
+cheque
 chest
 chicken
 child
@@ -283,7 +280,6 @@ confusion
 connection
 consequence
 consideration
-consist
 constant
 construction
 contact
@@ -415,7 +411,6 @@ dust
 duty
 ear
 earth
-ease
 east
 eat
 economics
@@ -432,7 +427,6 @@ elevator
 emergency
 emotion
 emphasis
-employ
 employee
 employer
 employment
@@ -472,7 +466,6 @@ explanation
 expression
 extension
 extent
-external
 extreme
 eye
 face
@@ -540,7 +533,6 @@ fuel
 fun
 function
 funeral
-funny
 future
 gain
 game
@@ -550,7 +542,6 @@ garbage
 garden
 gas
 gate
-gather
 gear
 gene
 general
@@ -558,7 +549,6 @@ gift
 girl
 girlfriend
 give
-glad
 glass
 glove
 go
@@ -574,7 +564,6 @@ grand
 grandfather
 grandmother
 grass
-great
 green
 grocery
 ground
@@ -594,8 +583,7 @@ half
 hall
 hand
 handle
-hang
-harm
+hangout
 hat
 hate
 head
@@ -672,7 +660,6 @@ insurance
 intention
 interaction
 interest
-internal
 international
 internet
 interview
@@ -721,15 +708,12 @@ layer
 lead
 leader
 leadership
-leading
 league
-leather
 leave
 lecture
 leg
 length
 lesson
-let
 letter
 level
 library
@@ -751,7 +735,6 @@ local
 location
 lock
 log
-long
 look
 loss
 love
@@ -761,10 +744,8 @@ lunch
 machine
 magazine
 mail
-main
 maintenance
 major
-make
 male
 mall
 man
@@ -835,6 +816,7 @@ mother
 motor
 mountain
 mouse
+mousse
 mouth
 move
 movie
@@ -1060,7 +1042,7 @@ recognition
 recommendation
 record
 recording
-recover
+recovery
 red
 reference
 reflection
@@ -1076,7 +1058,6 @@ relative
 release
 relief
 remote
-remove
 rent
 repair
 repeat
@@ -1108,7 +1089,6 @@ review
 revolution
 reward
 rice
-rich
 ride
 ring
 rip
@@ -1172,7 +1152,6 @@ sense
 sensitive
 sentence
 series
-serve
 service
 session
 set
@@ -1189,7 +1168,6 @@ ship
 shirt
 shock
 shoe
-shoot
 shop
 shopping
 shot
@@ -1201,7 +1179,6 @@ sign
 signal
 signature
 significance
-silly
 silver
 simple
 sing
@@ -1227,7 +1204,6 @@ smoke
 snow
 society
 sock
-soft
 software
 soil
 solid
@@ -1301,7 +1277,6 @@ student
 studio
 study
 stuff
-stupid
 style
 subject
 substance
@@ -1338,7 +1313,6 @@ tax
 tea
 teach
 teacher
-teaching
 team
 tear
 technology
@@ -1413,13 +1387,11 @@ upper
 upstairs
 use
 user
-usual
 vacation
 valuable
 value
 variation
 variety
-vast
 vegetable
 vehicle
 version
@@ -1451,7 +1423,6 @@ wedding
 week
 weekend
 weight
-weird
 welcome
 west
 western
@@ -1476,10 +1447,8 @@ wood
 word
 work
 worker
-working
 world
 worry
-worth
 wrap
 writer
 writing
