@@ -59,7 +59,9 @@ def NumberToBPM(number):
   bpm_range = args.max_bpm - args.min_bpm
   return round(args.min_bpm + bpm_range * number)
 
-def ListNumberToString(words, number):
+def ListNumberToString(words, number, probability_of_none=0.0):
+  scaled_number = number * (1.0 + probability_of_none)
+  if scaled_number > 1.0: return None
   index = int(number * len(words))
   if index < 0: index = 0
   if index >= len(words): index = len(words) - 1
@@ -107,23 +109,19 @@ def NumberToLength(number):
   return length_in_seconds
 
 
-def NumberToArticle(number):
+def NumberToArticle(number, probability_of_none=0.25):
   return ListNumberToString([
       'my', 'your', 'his', 'her', 'our', 'their', 'the', 'the', 'the', 'a', 'a',
-      'a', None, None, None, None
-  ], number)
+      'a'
+  ], number, probability_of_none)
 
 
-def NumberToAdjective(number):
-  return ListNumberToString(adjectives, number)
+def NumberToAdjective(number, probability_of_none=0.05):
+  return ListNumberToString(adjectives, number, probability_of_none)
 
 
-def NumberToNoun(number):
-  return ListNumberToString(nouns, number)
-
-
-def NumberToNoun(number):
-  return ListNumberToString(nouns, number)
+def NumberToNoun(number, probability_of_none=0.01):
+  return ListNumberToString(nouns, number, probability_of_none)
 
 
 def PluraliseNoun(noun):
@@ -153,24 +151,49 @@ def PluraliseNoun(noun):
   return noun + 's'
 
 
+def ArticleCorrection(article, next_word):
+  if article == 'A' and next_word[0] in ['A', 'E', 'I', 'O', 'U']:
+    return article + 'n'
+  else:
+    return article
+
+
 def GetTrackTitle(track):
     title = ''
-    article = NumberToArticle(track['article'])
-    adjective = NumberToAdjective(track['adjective']).capitalize()
-    noun = NumberToNoun(track['noun']).capitalize()
-    if article:
-      article = article.capitalize()
-      if article == 'A' and adjective[0] in ['A', 'E', 'I', 'O', 'U']:
-        title = article + 'n '
+    noun = NumberToNoun(track['noun'])
+    if noun:
+      # Noun
+      noun = noun.capitalize()
+      adjective = NumberToAdjective(track['adjective'])
+      if adjective:
+        # Noun and Adjective
+        adjective = adjective.capitalize()
+        article = NumberToArticle(track['article'])
+        if article:
+          # Noun, Adjective & Article
+          article = ArticleCorrection(article.capitalize(), adjective)
       else:
-        title = article + ' '
-    title += adjective + ' '
-    probability_of_plural = 0.3
-    if track['plural'] < probability_of_plural and article != 'A':
-      title += PluraliseNoun(noun)
+        # Noun and No Adjective
+        article = NumberToArticle(track['article'])
+        if article:
+          # Noun, No Adjective & Article
+          article = ArticleCorrection(article.capitalize(), noun)
     else:
-      title += noun
-    return title
+      # No Noun
+      adjective = NumberToAdjective(track['adjective'], 0.0).capitalize()
+      article = 'The'
+
+    probability_of_plural = 0.3
+    if noun and track['plural'] < probability_of_plural and ((article and article[0] != 'A') or not article):
+      noun = PluraliseNoun(noun)
+    title_words = []
+    if article:
+      title_words.append(article)
+    if adjective:
+      title_words.append(adjective)
+    if noun:
+      title_words.append(noun)
+    return ' '.join(title_words)
 
 
 def GetCyclicDistance(a, b):
