@@ -27,7 +27,6 @@ if args.track_count > 0 and args.album_length > 0:
   raise Exception('You may no specify track_count and album_length.')
 
 
-
 def PathCanonicalize(filename):
   if os.path.isabs(filename):
     return filename
@@ -59,18 +58,34 @@ def NumberToBPM(number):
   bpm_range = args.max_bpm - args.min_bpm
   return round(args.min_bpm + bpm_range * number)
 
+
+def PDFNumberToString(words, number):
+  pdf_sum = 0.0
+  for (_, b) in words:
+    pdf_sum += b
+  limit = pdf_sum * number
+  pdf_partial_sum = 0.0
+  for (a, b) in words:
+    pdf_partial_sum += b
+    if pdf_partial_sum >= limit:
+      return a
+
+
 def ListNumberToString(words, number, probability_of_none=0.0):
   scaled_number = number * (1.0 + probability_of_none)
   if scaled_number > 1.0: return None
-  index = int(number * len(words))
-  if index < 0: index = 0
-  if index >= len(words): index = len(words) - 1
-  return words[index]
+  if isinstance(words[0], tuple):
+    return PDFNumberToString(words, number)
+  else:
+    index = int(number * len(words))
+    if index < 0: index = 0
+    if index >= len(words): index = len(words) - 1
+    return words[index]
 
 def NumberToKey(number):
   return ListNumberToString([
-      'C', 'C', 'C#', 'Db', 'D', 'D', 'D#', 'Eb', 'E', 'E', 'F', 'F', 'F#',
-      'Gb', 'G', 'G', 'G#', 'Ab', 'A', 'A', 'A#', 'Bb', 'B', 'B'
+      'Cb', 'C', 'C#', 'Db', 'D', 'D', 'D#', 'Eb', 'E', 'E#', 'Fb', 'F', 'F#',
+      'Gb', 'G', 'G', 'G#', 'Ab', 'A', 'A', 'A#', 'Bb', 'B', 'B#'
   ], number)
 
 
@@ -92,7 +107,8 @@ def NumberToMood(number):
 
 
 def NumberToTimeSignature(number):
-  return ListNumberToString(['2/4', '3/4', '4/4', '7/8', '5/4'], number)
+    return ListNumberToString([
+        ('2/4', 1), ('3/4', 20), ('4/4', 68), ('7/8', 8), ('5/4', 3)], number)
 
 
 def NumberToTexture(number):
@@ -111,8 +127,8 @@ def NumberToLength(number):
 
 def NumberToArticle(number, probability_of_none=0.25):
   return ListNumberToString([
-      'my', 'your', 'his', 'her', 'our', 'their', 'the', 'the', 'the', 'a', 'a',
-      'a'
+      ('my', 1), ('your', 1), ('his', 1), ('her', 1), ('our', 1),
+      ('their', 1), ('the', 3), ('a', 3)
   ], number, probability_of_none)
 
 
@@ -251,7 +267,7 @@ def AppendTrack(tracks, length):
       'mode': GetUniformRandom(),
       'colour': GetUniformRandom(),
       'mood': GetUniformRandom(),
-      'time': GetGaussRandom(),
+      'time': GetUniformRandom(),
       'length': length,
       'article': GetUniformRandom(),
       'adjective': GetUniformRandom(),
