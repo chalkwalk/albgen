@@ -325,9 +325,10 @@ def GenerateAlbumHTMLText(album):
   output += '    <title>Your Album Listing</title>\n'
   output += '  </head>\n'
   output += '  <body>\n'
+  output += '    <h2>Album Listing</h2>\n'
   for index, track in enumerate(album):
+    output += '    <h3>%s - %s (%s)</h2>\n' % (index + 1, GetTrackTitle(track), SecondsToMinutes(NumberToLength(track['length'])))
     output += '    <p>\n'
-    output += '      %s - %s (%s)<br>\n' % (index + 1, GetTrackTitle(track), SecondsToMinutes(NumberToLength(track['length'])))
     output += '      A %s, %s, %s track in %s,<br>\n' % (NumberToTexture(track['texture']).capitalize(), NumberToColour(track['colour']).capitalize(), NumberToMood(track['mood']).capitalize(), NumberToTimeSignature(track['time']))
     output += '      The key of %s %s at %sbpm.\n' % (NumberToKey(track['key']), NumberToMode(track['mode']).capitalize(), NumberToBPM(track['tempo']))
     output += '    </p>\n'
