@@ -17,8 +17,8 @@ parser.add_argument('--album_length', '-a', metavar='TIME', default=0, type=int,
 parser.add_argument('--max_bpm', '-m', type=int, default=150, help='The fastest BPM to suggest.')
 parser.add_argument('--min_bpm', '-i', type=int, default=70, help='The slowest BPM to suggest.')
 parser.add_argument('--exclude_mode', '-e', metavar='MODE', action='append', default=[], choices=modes, type=lambda s: s.lower(), help='(Repeated) A musical mode to exclude.')
-parser.add_argument('--max_length', '-x', metavar='MAX_LEN', type=int, default=150, help='The longest track to suggest in seconds.')
-parser.add_argument('--min_length', '-n', metavar='MIN_LEN', type=int, default=70, help='The shortest track to suggest in seconds.')
+parser.add_argument('--max_length', '-x', metavar='MAX_LEN', type=int, default=330, help='The longest track to suggest in seconds.')
+parser.add_argument('--min_length', '-n', metavar='MIN_LEN', type=int, default=150, help='The shortest track to suggest in seconds.')
 parser.add_argument('--output_format', '-o', metavar='TYPE', type=lambda s: s.lower(), choices=['human', 'yaml', 'csv', 'html', 'www'], default='human', help='The format to output the album listing.')
 
 args = parser.parse_args()
