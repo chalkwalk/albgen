@@ -13,7 +13,7 @@ modes = ['lydian', 'ionian', 'mixolydian', 'dorian', 'aeolian', 'phrygian',
 parser = argparse.ArgumentParser(description='Generate an album listing.')
 
 parser.add_argument('--track_count', '-t', metavar='COUNT', default=0, type=int, help='Show many tracks the album will have (use this or album_length).')
-parser.add_argument('--album_length', '-a', metavar='TIME', default=0, type=int, help='How long hte album should be in seconds (use this or track_count).')
+parser.add_argument('--album_length', '-a', metavar='TIME', default=0, type=int, help='How long the album should be in seconds (use this or track_count).')
 parser.add_argument('--max_bpm', '-m', type=int, default=150, help='The fastest BPM to suggest.')
 parser.add_argument('--min_bpm', '-i', type=int, default=70, help='The slowest BPM to suggest.')
 parser.add_argument('--exclude_mode', '-e', metavar='MODE', action='append', default=[], choices=modes, type=lambda s: s.lower(), help='(Repeated) A musical mode to exclude.')
