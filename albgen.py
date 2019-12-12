@@ -20,6 +20,8 @@ parser.add_argument('--exclude_mode', '-e', metavar='MODE', action='append', def
 parser.add_argument('--max_length', '-x', metavar='MAX_LEN', type=int, default=330, help='The longest track to suggest in seconds.')
 parser.add_argument('--min_length', '-n', metavar='MIN_LEN', type=int, default=150, help='The shortest track to suggest in seconds.')
 parser.add_argument('--output_format', '-o', metavar='TYPE', type=lambda s: s.lower(), choices=['human', 'yaml', 'csv', 'html', 'www'], default='human', help='The format to output the album listing.')
+parser.add_argument('--adjective_list', '-d', metavar='FILE', type=str, default='data/adjectives.txt', help='The file containing an adjective list.')
+parser.add_argument('--noun_list', '-u', metavar='FILE', type=str, default='data/nouns.txt', help='The file containing an noun list.')
 
 args = parser.parse_args()
 
@@ -44,9 +46,9 @@ def LoadWordList(filename):
     return words
 
 
-adjectives = LoadWordList('data/adjectives.txt')
+adjectives = LoadWordList(args.adjective_list)
 
-nouns = LoadWordList('data/nouns.txt')
+nouns = LoadWordList(args.noun_list)
 
 
 def GetUniformRandom():
