@@ -22,6 +22,7 @@ parser.add_argument('--min_length', '-n', metavar='MIN_LEN', type=int, default=1
 parser.add_argument('--output_format', '-o', metavar='TYPE', type=lambda s: s.lower(), choices=['human', 'yaml', 'csv', 'html', 'www'], default='human', help='The format to output the album listing.')
 parser.add_argument('--adjective_list', '-d', metavar='FILE', type=str, default='data/adjectives.txt', help='The file containing an adjective list.')
 parser.add_argument('--noun_list', '-u', metavar='FILE', type=str, default='data/nouns.txt', help='The file containing an noun list.')
+parser.add_argument('--nopluralize_nouns', '-p', default=False, action='store_true', help='Whether or not to occasionally pluralize nouns.')
 
 args = parser.parse_args()
 
@@ -171,7 +172,7 @@ def NumberToNoun(number, probability_of_none=0.01):
   return ListNumberToString(nouns, number, probability_of_none)
 
 
-def PluraliseNoun(noun):
+def PluralizeNoun(noun):
   # Given a noun, return its plural.
   word = noun.lower()
   if word.endswith('fe'):
@@ -234,8 +235,8 @@ def GetTrackTitle(track):
     article = 'The'
 
   probability_of_plural = 0.3
-  if noun and track['plural'] < probability_of_plural and ((article and article[0] != 'A') or not article):
-    noun = PluraliseNoun(noun)
+  if noun and track['plural'] < probability_of_plural and ((article and article[0] != 'A') or not article) and not args.nopluralize_nouns:
+    noun = PluralizeNoun(noun)
   title_words = []
   if article:
     title_words.append(article)
